@@ -1,5 +1,7 @@
 '''
 
+@author: Alison Sneyd
+
  This script implements the Poisson process method, target method and knee method over 33 runs for the CLEF2017 dataset and scores them. 
 
 '''
