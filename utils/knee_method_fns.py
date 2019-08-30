@@ -2,7 +2,7 @@
 """
 Created on Tue Apr  9 14:31:00 2019
 
-@author: XXX
+@author: Alison Sneyd
 
 This script contains functions to find stopping points for the knee method.
 """
