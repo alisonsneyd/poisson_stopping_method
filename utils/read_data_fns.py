@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Author: XXX
+Author: Alison Sneyd
 Date created: 21/03/2019
 
 This script contains functions to make dictionaries from the relevance and ranking data.
