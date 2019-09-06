@@ -1,6 +1,5 @@
 '''
-
-@author: Alison Sneyd
+ Author: Alison Sneyd
 
  This script implements the Poisson process method, target method and knee method over 33 runs for the CLEF2017 dataset and scores them. 
 
@@ -72,9 +71,10 @@ for run in all_runs:
         # EXTRACT COUNTS AND REL LISTS
         n_docs = len(doc_rank_dic[query_id])  # total n. docs in topic
         rel_list = rank_rel_dic[query_id]  # list binary rel of ranked docs 
-        rel_doc_idxs = np.where(np.array(rel_list) == 1)[0]
+        
         
         # ORACLE
+        rel_doc_idxs = np.where(np.array(rel_list) == 1)[0]
         orcale_n_rel = math.ceil(len(rel_doc_idxs)*des_recall)
         oracle_idx = rel_doc_idxs[orcale_n_rel-1]
         oracle_eff = oracle_idx+1
@@ -112,7 +112,7 @@ for run in all_runs:
         # INHOMOGENEOUS POISSON PROCESS
         # check topic meets initial relevance requirement
         n_samp_docs = int(round(n_docs*sample_props[0]))
-        sample_rel_list = rel_list[0:n_samp_docs]  # chuck of rel list examined in sample
+        sample_rel_list = rel_list[0:n_samp_docs]  # chunck of rel list examined in sample
 
         # if meet size requirement run algorithm; else return n_docs as stopping point
         if (np.sum(sample_rel_list) >= min_rel_in_sample):
@@ -131,7 +131,7 @@ for run in all_runs:
                 windows = make_windows(n_windows, sample_prop, n_docs)
                 window_size = windows[0][1]
 
-                x,y = get_points(windows, window_size, rel_list)  # calculate points that will be used to fit curve
+                x,y = get_points(windows, window_size, sample_rel_list)  # calculate points that will be used to fit curve
 
                 try: # try to fit curve
                     p0 = [0.1, 0.001, 1]  # initialise curve parameters
@@ -140,19 +140,20 @@ for run in all_runs:
                     y2 = model_func(x, a, k, b) # get y-values for fitted curve
 
                     # check distance between "curves" at end sample
-                    n_rel_at_end_samp = np.array(sample_rel_list).cumsum()[-1]
+                    n_rel_at_end_samp = np.sum(sample_rel_list)
                     y3 =  model_func(np.array(range(1,len(sample_rel_list)+1)), a, k, b)
-                    pred_by_curve_rel_at_end_samp = y3.cumsum()[-1]
-                    pred_by_curve_rel_at_end_samp = int(round(pred_by_curve_rel_at_end_samp))
+                    est_by_curve_end_samp = np.sum(y3)
+                    est_by_curve_end_samp = int(round(est_by_curve_end_samp))
                     
                     
-                    if n_rel_at_end_samp >= des_recall*pred_by_curve_rel_at_end_samp:
+                    if n_rel_at_end_samp >= des_recall*est_by_curve_end_samp:
                         
-                        # using inhom Poisson process with fitted curve as rate fn, 
-                        # predict total number rel docs in topic 
+                        # using inhom Poisson process with fitted curve as rate fn, predict total number rel docs in topic 
                         mu = (a/-k)*(math.exp(-k*n_docs)-1)  # integral model_func
                         pred_n_rel = predict_n_rel(des_prob, n_docs, mu) # predict max number rel docs (using poisson cdf)
-                        pred_stop_n = get_stopping_inhom(des_recall, pred_n_rel, rel_list, n_docs)  # use prev value to pred stopping point             
+                        des_n_rel = des_recall*pred_n_rel
+                        if des_n_rel <= n_rel_at_end_samp:
+                            pred_stop_n = n_rel_at_end_samp             
                   
 
                 except: # if can't fit curve
@@ -168,11 +169,8 @@ for run in all_runs:
             score_dic[query_id].append((inhom_recall, inhom_effort, inhom_accept))
 
 
-        else: # if not enough docs in topic or not enough rel docs in min sample:
-            #pred_stop_n = 0  # no predicted stopping point
-
-            inhom_stop_n = n_docs  # take stopping point as n_docs
-            inhom_recall = calc_recall(rel_list, inhom_stop_n)
+        else: # if not enough rel docs in min sample, stopping point is n_docs
+            inhom_recall = calc_recall(rel_list, n_docs)
             inhom_effort = n_docs
             inhom_accept = calc_accept(inhom_recall, des_recall)
             score_dic[query_id].append((inhom_recall, inhom_effort, inhom_accept))
@@ -206,11 +204,10 @@ for run in all_runs:
 
 
 
-
 df = pd.DataFrame.from_dict(run_score_dic, orient='index')
 df.loc['Mean']= df.mean()
 df = df.round(2)
 df.to_json("2017run_scores", orient='records')
 
-
+print(df.loc['Mean'])
 

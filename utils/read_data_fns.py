@@ -81,20 +81,4 @@ def make_topics_list(doc_rank_dic, min_topic_size):
     return sorted_topics
 
 
-# make dictionary of list of docids for each queryid 
-def make_query_doc_dic(qrels_data):
-    query_doc_dic = {}
-    
-    for row in qrels_data:
-        row = row.split()
-        rel = int(row[3])
 
-        query_id = row[0]
-        doc_id = row[2]
-    
-        if query_id not in query_doc_dic.keys():
-            query_doc_dic[query_id] = [doc_id]
-        else:
-            query_doc_dic[query_id].append(doc_id)
-                
-    return query_doc_dic

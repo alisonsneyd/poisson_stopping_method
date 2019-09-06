@@ -67,19 +67,5 @@ def predict_n_rel(des_prob, n_docs, mu):
     return i
 
 
-# function to predict stopping point for inhom pp using rel list, returns rank stopping pt
-def get_stopping_inhom(des_recall, pred_n_rel, rel_list, n_docs):
 
-    des_n_rel = des_recall*pred_n_rel
-
-    i = 0
-    n_rel_retrieved = 0
-    while  (i < n_docs) and (n_rel_retrieved < int(round(des_n_rel))):
-        if rel_list[i] == 1:
-            n_rel_retrieved += 1
-        i += 1 
-
-    stop_rank = i-1
-
-    return stop_rank
             
