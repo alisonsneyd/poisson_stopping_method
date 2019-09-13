@@ -12,7 +12,6 @@ import math
 from scipy.optimize import curve_fit
 import random
 import glob
-import json
 
 
 from utils.read_data_fns import *
@@ -207,7 +206,7 @@ for run in all_runs:
 df = pd.DataFrame.from_dict(run_score_dic, orient='index')
 df.loc['Mean']= df.mean()
 df = df.round(2)
-df.to_json("2017run_scores", orient='records')
+df.to_csv("2017run_scores")
 
 print(df.loc['Mean'])
 

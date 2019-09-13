@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-
 @author: Alison Sneyd
+
+This script runs 3-fold cross validation for the knee method.
 """
 
 # IMPORTS
@@ -23,7 +24,7 @@ from utils.eval_fns import *
 
 
 # read topic relevance data (indep of runs)
-with open('../data/relevance/qrel_abs_test.txt', 'r') as infile:
+with open('data/relevance/qrel_abs_test.txt', 'r') as infile:
     qrels_data = infile.readlines()    
 query_rel_dic = make_rel_dic(qrels_data) # make dictionary of list of docids relevant to each queryid
     
@@ -36,7 +37,7 @@ knee_adjustments = [0, 25, 50, 100, 150, 200] # adjustments to target ratio
 
 
 # LOAD AND SPLIT DATA
-all_runs = glob.glob('../data/runs2017_table3/*/*')
+all_runs = glob.glob('data/runs2017_table3/*/*')
 random.seed(1)
 random.shuffle(all_runs)
 split1 = all_runs[0:11]
