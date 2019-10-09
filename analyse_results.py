@@ -24,12 +24,13 @@ top5idxs = sorted_idxs[0:5]
 bottom5idxs = sorted_idxs[-5:]
 mid5idxs = sorted_idxs[14:19]  # 15-19 inclusive
 
+print("Top 5 Runs:")
 for i in top5idxs:
     print(runs[i])
-print("\n")
+print("\n Mid 5 Runs 5 Runs:")
 for i in mid5idxs:
     print(runs[i])
-print("\n")
+print("\n Bottom 5 Runs 5 Runs:")
 for i in bottom5idxs:
     print(runs[i])
     
@@ -59,8 +60,8 @@ df_means = df_means.rename({'tar tot eff': 'TM',
                             'kn150 tot eff': 'KM-default',
                             'kn50 tot eff': 'KM-tuned', 
                             'in tot eff': 'PP','oracle eff': 'OR'}, axis=1)
+print("\n Top, Mid and Bottom 5 Results: \n")
 print(df_means)
-
 
 # PROCESS DATA INTO LATEX TABLE
 df_latex = df_means.T
@@ -85,6 +86,7 @@ df_latex_p4 = df_latex[["Bottom 5"]].copy()
 Bottom5 = df_latex_p4["Bottom 5"].tolist()
 df_latex_p4["Bottom ES"] = [pes(eff) for eff in Bottom5]
 
+print("\n Latex Tables: \n")
 print(df_latex_p1.to_latex())
 print(df_latex_p2.to_latex())
 print(df_latex_p3.to_latex())
