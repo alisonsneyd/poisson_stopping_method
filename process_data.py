@@ -12,7 +12,6 @@ import glob
 
 
 # COPY RELEVANCE FILE
-wd = os.getcwd()
 os.mkdir("data/relevance")
 copy('data/tar-master/2017-TAR/testing/qrels/qrel_abs_test.txt', 'data/relevance/')
 
