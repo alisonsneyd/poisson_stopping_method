@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 @author: Alison Sneyd
-This code copies the relevant files from https://github.com/CLEF-TAR/tar to a
+This code copies the required files from the tar-master directory (available at https://github.com/CLEF-TAR/tar) to a
 new directory. 
 """
 
@@ -14,7 +14,6 @@ import glob
 # COPY RELEVANCE FILE
 wd = os.getcwd()
 os.mkdir("data/relevance")
-#os.mkdir(os.path.join(wd, "data/relevance"))
 copy('data/tar-master/2017-TAR/testing/qrels/qrel_abs_test.txt', 'data/relevance/')
 
 
